@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "644167850105",
+    "project_id": "soendacoffee3",
+    "storage_bucket": "soendacoffee3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644167850105:android:a4d09e5d4c33e19c869ca8",
+        "android_client_info": {
+          "package_name": "com.satiaadhi.soendacoffee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "644167850105-nb1lr0iblodl5gfkhgvuki50dd1s6jcs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcyB-Iutlae6wV0SX3ZDogL1V1HZxua_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "644167850105-nb1lr0iblodl5gfkhgvuki50dd1s6jcs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
