@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:soendacoffee/pages/signup.dart';
+import 'package:soendacoffee/pages/sign_up_page.dart';
 import 'package:soendacoffee/providers/auth_helper.dart';
 import 'package:soendacoffee/theme.dart';
 
-class LoginPage extends StatefulWidget {
+class SignInPag extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignInPagState createState() => _SignInPagState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignInPagState extends State<SignInPag> {
   // controler
 
   String txtemail, txtpassword;
@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
             // validasi ketika ada yg belum di isi (print di konsol)
             if (_emailController.text.isEmpty ||
                 _passwordController.text.isEmpty) {
-              print("Email and password cannot be empty");
+              print("Email dan password tidak boleh kosong");
               return;
             }
             try {

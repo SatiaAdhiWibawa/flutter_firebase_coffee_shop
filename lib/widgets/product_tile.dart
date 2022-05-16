@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:soendacoffee/models/product.dart';
 import 'package:soendacoffee/pages/pelanggan/product_page.dart';
 import 'package:soendacoffee/theme.dart';
+import 'package:intl/intl.dart';
 
 class ProductTile extends StatelessWidget {
   final Product product;
@@ -62,7 +63,10 @@ class ProductTile extends StatelessWidget {
                     height: 6,
                   ),
                   Text(
-                    product.harga,
+                    NumberFormat.currency(
+                            locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                        .format(double.parse(product.harga)),
+                    // product.harga.toString(),
                     style: priceTextStyle.copyWith(
                       fontWeight: medium,
                     ),

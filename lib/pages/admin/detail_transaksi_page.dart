@@ -3,29 +3,33 @@ import 'package:provider/provider.dart';
 import 'package:soendacoffee/providers/products.dart';
 import 'package:soendacoffee/theme.dart';
 
-class AddProductPage extends StatelessWidget {
-  static const route = "/add-product";
-
-  final TextEditingController namaController = TextEditingController();
-  final TextEditingController hargaController = TextEditingController();
-  final TextEditingController deskripsiController = TextEditingController();
-  final TextEditingController katagoriController = TextEditingController();
-  final TextEditingController fotoController = TextEditingController();
-  final TextEditingController galeriController = TextEditingController();
-  final TextEditingController stokController = TextEditingController();
+class DetailTransaksiPage extends StatelessWidget {
+  static const route = "/edit-transaksi";
 
   @override
   Widget build(BuildContext context) {
-    void save(
-      String nama,
-      String harga,
-      String deskripsi,
-      String katagori,
-      String foto,
-      String stok,
-    ) {
-      Provider.of<Products>(context, listen: false)
-          .addProduct(nama, harga, deskripsi, katagori, foto, stok);
+    String prodId = ModalRoute.of(context).settings.arguments as String;
+
+    var prov = Provider.of<Products>(context, listen: false);
+
+    var selectedProduct = prov.selectById(prodId);
+
+    final TextEditingController namaController =
+        TextEditingController(text: selectedProduct.nama);
+    final TextEditingController hargaController =
+        TextEditingController(text: selectedProduct.harga.toString());
+    final TextEditingController deskripsiController =
+        TextEditingController(text: selectedProduct.nama);
+    final TextEditingController katagoriController =
+        TextEditingController(text: selectedProduct.katagori);
+    final TextEditingController fotoController =
+        TextEditingController(text: selectedProduct.foto);
+    final TextEditingController stokController =
+        TextEditingController(text: selectedProduct.stok);
+
+    void edit(String nama, String harga, String deskripsi, String katagori,
+        String foto, String stok) {
+      prov.editProduct(prodId, nama, harga, deskripsi, katagori, foto, stok);
       Navigator.pop(context);
     }
 
@@ -299,61 +303,6 @@ class AddProductPage extends StatelessWidget {
       );
     }
 
-    // ignore: unused_element
-    Widget galeriInput() {
-      return Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Foro Produk 1',
-              style: primeryTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            Container(
-              height: 50,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              decoration: BoxDecoration(
-                color: backgroundColor2,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon_union.png',
-                      width: 16,
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        controller: galeriController,
-                        style: primeryTextStyle,
-                        decoration: InputDecoration.collapsed(
-                          hintText: 'Masukan URL Gambar',
-                          hintStyle: subtitleTextStyle,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
     Widget stokInput() {
       return Container(
         margin: EdgeInsets.only(top: 20),
@@ -408,13 +357,13 @@ class AddProductPage extends StatelessWidget {
       );
     }
 
-    Widget tambahProdukButton() {
+    Widget editProdukButton() {
       return Container(
         height: 50,
         width: double.infinity,
         margin: EdgeInsets.only(top: 30, bottom: 50),
         child: TextButton(
-          onPressed: () => save(
+          onPressed: () => edit(
               namaController.text,
               hargaController.text,
               deskripsiController.text,
@@ -428,7 +377,7 @@ class AddProductPage extends StatelessWidget {
             ),
           ),
           child: Text(
-            'Tambah Produk',
+            'Edit Produk',
             style: primeryTextStyle.copyWith(
               fontSize: 16,
               fontWeight: medium,
@@ -441,13 +390,13 @@ class AddProductPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor1,
       appBar: AppBar(
-        title: Center(child: Text("Tambah Produk")),
+        title: Center(child: Text("Edit Produk")),
         elevation: 0,
         backgroundColor: backgroundColor1,
         actions: [
           IconButton(
-            icon: Icon(Icons.save, color: primaryColor),
-            onPressed: () => save(
+            icon: Icon(Icons.save),
+            onPressed: () => edit(
                 namaController.text,
                 hargaController.text,
                 deskripsiController.text,
@@ -467,7 +416,7 @@ class AddProductPage extends StatelessWidget {
             katagoriInput(),
             fotoInput(),
             stokInput(),
-            tambahProdukButton(),
+            editProdukButton(),
           ],
         ),
       ),

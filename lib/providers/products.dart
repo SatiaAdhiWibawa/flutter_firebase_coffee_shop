@@ -3,17 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import '../models/product.dart';
+import 'package:soendacoffee/models/product.dart';
 
 class Products with ChangeNotifier {
   String urlMaster = "https://soendacoffee3-default-rtdb.firebaseio.com/";
   List<Product> _allProduct = [];
 
   List<Product> get allProduct => _allProduct;
-// get produk untuk
-  List<Product> _products = [];
 
-  List<Product> get products => _products;
+// // get produk untuk
+//   List<Product> _products = [];
+
+//   List<Product> get products => _products;
 
 // add produk
 

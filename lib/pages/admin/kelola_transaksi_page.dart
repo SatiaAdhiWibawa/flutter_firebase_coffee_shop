@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:soendacoffee/providers/products.dart';
+import 'package:soendacoffee/providers/checkout_provider.dart';
 import 'package:soendacoffee/theme.dart';
-import 'package:soendacoffee/widgets/product_item.dart';
-import 'add_product_page.dart';
+import 'package:soendacoffee/widgets/admin_checkout.dart';
 
-class KelolaProductPage extends StatefulWidget {
-  static const route = "/kelola-product";
+class KelolaTransaksiPage extends StatefulWidget {
+  static const route = "/kelola-transaksi";
 
   @override
-  _KelolaProductPageState createState() => _KelolaProductPageState();
+  _KelolaTransaksiPageState createState() => _KelolaTransaksiPageState();
 }
 
-class _KelolaProductPageState extends State<KelolaProductPage> {
+class _KelolaTransaksiPageState extends State<KelolaTransaksiPage> {
   bool isInit = true;
   bool isLoading = false;
 
@@ -20,7 +19,9 @@ class _KelolaProductPageState extends State<KelolaProductPage> {
   void didChangeDependencies() {
     if (isInit) {
       isLoading = true;
-      Provider.of<Products>(context, listen: false).inisialData().then((value) {
+      Provider.of<CheckoutProvider>(context, listen: false)
+          .inisialData()
+          .then((value) {
         setState(() {
           isLoading = false;
         });
@@ -57,32 +58,25 @@ class _KelolaProductPageState extends State<KelolaProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    final prov = Provider.of<Products>(context);
+    final prov = Provider.of<CheckoutProvider>(context);
     return Scaffold(
       backgroundColor: backgroundColor1,
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            "Kelola Produk",
-          ),
-        ),
+        title: Center(child: Text("Kelola Transaksi")),
         backgroundColor: backgroundColor1,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              color: primaryColor,
-            ),
-            onPressed: () => Navigator.pushNamed(context, AddProductPage.route),
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.add),
+          //   // onPressed: () => Navigator.pushNamed(context, AddProductPage.route),
+          // ),
         ],
       ),
       body: (isLoading)
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : (prov.allProduct.length == 0)
+          : (prov.allCheckout.length == 0)
               ? Center(
                   child: Text(
                     "Tidak ada data",
@@ -91,15 +85,26 @@ class _KelolaProductPageState extends State<KelolaProductPage> {
                     ),
                   ),
                 )
+              //           : Row(
+              //               children: prov.allCheckout
+              //                   .map(
+              //                     (checkout) => AdminCheckout(checkout),
+              //                   )
+              //                   .toList(),
+              //             ),
+              // );
               : ListView.builder(
-                  itemCount: prov.allProduct.length,
-                  itemBuilder: (context, i) => ProductItem(
-                    prov.allProduct[i].id,
-                    prov.allProduct[i].nama,
-                    prov.allProduct[i].harga.toString(),
-                    prov.allProduct[i].updatedAt,
-                    prov.allProduct[i].foto,
-                    prov.allProduct[i].stok,
+                  itemCount: prov.allCheckout.length,
+                  itemBuilder: (context, i) => AdminCheckout(
+                    prov.allCheckout[i].id,
+                    prov.allCheckout[i].atasnama,
+                    prov.allCheckout[i].catatan,
+                    // prov.allCheckout[i].items,
+                    prov.allCheckout[i].metodepembayaran,
+                    prov.allCheckout[i].nomeja,
+                    prov.allCheckout[i].status,
+                    prov.allCheckout[i].totalprice,
+                    prov.allCheckout[i].createdAt,
                   ),
                 ),
     );

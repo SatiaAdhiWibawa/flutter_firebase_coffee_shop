@@ -72,7 +72,7 @@ class _HomePagePelangganState extends State<HomePagePelanggan> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Soenda Coffee',
+                    'Soenda Kopi',
                     style: primeryTextStyle.copyWith(
                       fontSize: 24,
                       fontWeight: semiBold,
@@ -283,7 +283,7 @@ class _HomePagePelangganState extends State<HomePagePelanggan> {
       return Container(
         margin: EdgeInsets.all(defaultMargin),
         child: Text(
-          'New Menu',
+          'All Menu',
           style: primeryTextStyle.copyWith(
             fontSize: 22,
             fontWeight: semiBold,

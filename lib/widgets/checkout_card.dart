@@ -27,6 +27,7 @@ class CheckoutCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
+                fit: BoxFit.cover,
                 image: NetworkImage(
                   cart.product.foto,
                 ),
@@ -50,7 +51,7 @@ class CheckoutCard extends StatelessWidget {
                   // 'Rp. ${cart.product.price.toString()}',
                   NumberFormat.currency(
                           locale: 'id', symbol: 'Rp ', decimalDigits: 0)
-                      .format(cart.product.harga),
+                      .format(double.parse(cart.product.harga)),
                   style: priceTextStyle,
                 ),
               ],

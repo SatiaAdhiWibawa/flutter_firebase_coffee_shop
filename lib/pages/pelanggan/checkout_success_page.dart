@@ -47,7 +47,7 @@ class CheckoutSuccessPage extends StatelessWidget {
               child: TextButton(
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, '/home', (route) => false);
+                      context, '/main-pelanggan', (route) => false);
                 },
                 style: TextButton.styleFrom(
                     backgroundColor: primaryColor,

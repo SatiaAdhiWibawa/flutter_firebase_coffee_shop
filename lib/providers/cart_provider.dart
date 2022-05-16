@@ -49,14 +49,12 @@ class CartProvider with ChangeNotifier {
 // Function untuk tambah qty
   addQuantity(int id) {
     _carts[id].quantity = _carts[id].quantity + 1;
-    // _carts[id].quantity++;
     notifyListeners();
   }
 
 // Function untuk mengurangi qty
   reduceQuantity(int id) {
     _carts[id].quantity = _carts[id].quantity - 1;
-    // _carts[id].quantity--;
     if (_carts[id].quantity == 0) {
       _carts.removeAt(id);
     }
@@ -76,7 +74,7 @@ class CartProvider with ChangeNotifier {
   totalPrice() {
     double total = 0;
     for (var item in _carts) {
-      total += (item.quantity * int.parse(item.product.harga));
+      total += (item.quantity * double.parse(item.product.harga));
     }
     return total;
   }

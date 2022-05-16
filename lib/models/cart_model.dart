@@ -12,21 +12,22 @@ class CartModel {
     this.product,
     this.quantity,
   });
-  // // Konstruktor untuk CartModel dari json
-  // CartModel.fromJson(Map<String, dynamic> json) {
-  //   id = json['id'];
-  //   product = Product.fromJson(json['product']);
-  //   quantity = json['quantity'];
-  // }
 
-  // // function untuk mengubah CartModel ke dalam bentunk json
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'product': product.toJson(),
-  //     'quantity': quantity,
-  //   };
-  // }
+  // Konstruktor untuk CartModel dari json
+  CartModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    product = Product.fromJson(json['product']);
+    quantity = json['quantity'];
+  }
+
+  // function untuk mengubah CartModel ke dalam bentunk json
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'product': product.toJson(),
+      'quantity': quantity,
+    };
+  }
 
   // Function untuk mengambil total harga = data harga dikali qty
   double getTotalPrice() {

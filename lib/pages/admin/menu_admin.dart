@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../theme.dart';
+import 'package:soendacoffee/theme.dart';
 
 class MenuAdmin extends StatefulWidget {
   @override
@@ -15,9 +14,12 @@ class _MenuAdminState extends State<MenuAdmin> {
       home: Scaffold(
         backgroundColor: backgroundColor1,
         appBar: AppBar(
-          title: Text(
-            "Soenda Coffe - Menu Administrator",
-            textAlign: TextAlign.center,
+          title: Center(
+            child: Text("Soenda Coffe - Menu Administrator",
+                style: primeryTextStyle.copyWith(
+                  fontSize: 18,
+                  fontWeight: bold,
+                )),
           ),
           elevation: 0,
           backgroundColor: backgroundColor1,
@@ -31,8 +33,8 @@ class _MenuAdminState extends State<MenuAdmin> {
                   Flexible(
                     flex: 1,
                     child: GestureDetector(
-                      // onTap: () =>
-                      //     Navigator.pushNamed(context, '/kelola-transaksi'),
+                      onTap: () =>
+                          Navigator.pushNamed(context, '/kelola-transaksi'),
                       child: Container(
                         width: 200,
                         height: 200,

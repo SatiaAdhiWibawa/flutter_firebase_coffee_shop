@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:provider/provider.dart';
+import 'package:soendacoffee/models/cart_model.dart';
+import 'package:soendacoffee/providers/checkout_provider.dart';
+import 'package:soendacoffee/providers/transaction_provider.dart';
 import 'package:soendacoffee/widgets/checkout_card.dart';
 import 'package:soendacoffee/widgets/loading_button.dart';
 import 'package:soendacoffee/providers/cart_provider.dart';
@@ -12,13 +15,18 @@ class CheckoutPage extends StatefulWidget {
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 
+String txtnama, txttempat;
+final _formKey = GlobalKey<FormState>();
 TextEditingController atasNamaController = TextEditingController(text: '');
 TextEditingController catatanController = TextEditingController(text: '');
-TextEditingController selected = TextEditingController(text: '');
+TextEditingController selectedTempatController =
+    TextEditingController(text: '');
+TextEditingController selectedPayController = TextEditingController(text: '');
 
 class _CheckoutPageState extends State<CheckoutPage> {
   bool isLoading = false;
-  String selected;
+  String selectedTempatController;
+  String selectedPayController;
 
   List<String> data = [
     "Makan dirumah",
@@ -38,37 +46,81 @@ class _CheckoutPageState extends State<CheckoutPage> {
     "Meja No.14",
     "Meja No.15",
   ];
+  List<String> metodePembayaran = [
+    "Uang Tunai",
+    "Scan QR via GoPay",
+    "Scan QR Via ShopeePay",
+  ];
 
   @override
   Widget build(BuildContext context) {
     // panggil provider
-
     CartProvider cartProvider = Provider.of<CartProvider>(context);
-    // TransactionProvider transactionPovider =
-    //     Provider.of<TransactionProvider>(context);
-    // AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    TransactionProvider transactionPovider =
+        Provider.of<TransactionProvider>(context);
+    // CheckoutProvider checkoutProvider = Provider.of<CheckoutProvider>(context);
 
-    // handleCheckout() async {
-    //   setState(() {
-    //     isLoading = true;
-    //   });
-//       if (await transactionPovider.checkout(
-//         // authProvider.user.token,
-//         cartProvider.carts,
-//         cartProvider.totalPrice(),
-//         atasNamaController.text,
-//         catatanController.text,
-//         selected.toString(),
-//       )) {
-//         cartProvider.carts = []; //untuk clear carts menjadi kosong
-//         Navigator.pushNamedAndRemoveUntil(
-//             context, '/checkout-success', (route) => false);
-//       }
-// // jika proses selesai maka set loading jadi false
-//       setState(() {
-//         isLoading = false;
-//       });
-//     }
+    void save(
+      String atasnama,
+      String selectedTempatController,
+      String selectedPayController,
+      List<CartModel> carts,
+      String catatan,
+      String totalPrice,
+    ) {
+      // validasi ketika ada yg belum di isi ketika CO
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+      }
+
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<CheckoutProvider>(context, listen: false).addCheckout(
+        atasnama,
+        selectedTempatController,
+        selectedPayController,
+        carts,
+        catatan,
+        totalPrice.toString(),
+      );
+      cartProvider.carts = []; //untuk clear carts menjadi kosong
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/checkout-success', (route) => false);
+      // jika proses selesai maka set loading jadi false
+      setState(() {
+        isLoading = false;
+      });
+    }
+
+    // ignore: unused_element
+    handleCheckout() async {
+      // validasi ketika ada yg belum di isi ketika CO
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+      }
+
+      setState(() {
+        isLoading = true;
+      });
+
+      if (await transactionPovider.checkout(
+        cartProvider.carts,
+        cartProvider.totalPrice(),
+        atasNamaController.text,
+        catatanController.text,
+        selectedTempatController.toString(),
+        selectedPayController.toString(),
+      )) {
+        cartProvider.carts = []; //untuk clear carts menjadi kosong
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/checkout-success', (route) => false);
+      }
+// jika proses selesai maka set loading jadi false
+      setState(() {
+        isLoading = false;
+      });
+    }
 
     header() {
       return AppBar(
@@ -81,145 +133,202 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
     }
 
-    Widget pesananDetail() {
-      return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Atas Nama :',
-              style: secondaryTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            Container(
-              height: 50,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              decoration: BoxDecoration(
-                color: backgroundColor3,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon_user.png',
-                      width: 16,
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        style: primeryTextStyle,
-                        controller: atasNamaController,
-                        decoration: InputDecoration.collapsed(
-                          hintText: 'Input Nama',
-                          hintStyle: subtitleTextStyle,
-                        ),
-                      ),
-                    ),
-                  ],
+    pesananDetail() {
+      return Form(
+        key: _formKey,
+        child: Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Atas Nama :',
+                style: secondaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: medium,
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Catatan :',
-              style: secondaryTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
+              SizedBox(
+                height: 12,
               ),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            Container(
-              height: 50,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              decoration: BoxDecoration(
-                color: backgroundColor3,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon_email.png',
-                      width: 16,
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        style: primeryTextStyle,
-                        controller: catatanController,
-                        decoration: InputDecoration.collapsed(
-                          hintText: 'Tulis catatan di sini',
-                          hintStyle: subtitleTextStyle,
+              Container(
+                height: 50,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: backgroundColor3,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/icon_user.png',
+                        width: 16,
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          style: primeryTextStyle,
+                          controller: atasNamaController,
+                          decoration: InputDecoration.collapsed(
+                            hintText: 'Input Nama',
+                            hintStyle: subtitleTextStyle,
+                          ),
+                          onSaved: (value) {
+                            txtnama = value;
+                          },
+                          validator: validateNama,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Tempat :',
-              style: secondaryTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-
-            // Dropdown button
-
-            Container(
-              decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: DropdownSearch<String>(
-                dropdownSearchBaseStyle: primeryTextStyle,
-                showClearButton: true,
-                mode: Mode.DIALOG,
-                showSelectedItem: true,
-                items: data,
-                hint: "Silahkan pilih tempat",
-                popupItemDisabled: (String s) => s.startsWith('Z'),
-                onChanged: (value) {
-                  print(value);
-                  selected = (value);
-                },
-                // onFind: (String value) => getData(value),
-                // selectedItem: "Pilih tempat",
-                dropdownSearchDecoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 3,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 10),
+              Text(
+                'Catatan :',
+                style: secondaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: medium,
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Container(
+                height: 50,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: backgroundColor3,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/icon_email.png',
+                        width: 16,
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          style: primeryTextStyle,
+                          controller: catatanController,
+                          decoration: InputDecoration.collapsed(
+                            hintText: 'Tulis catatan di sini',
+                            hintStyle: subtitleTextStyle,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Tempat :',
+                style: secondaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: medium,
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+
+              // Dropdown button
+
+              Container(
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: DropdownSearch<String>(
+                  dropdownSearchBaseStyle: primeryTextStyle,
+                  showClearButton: true,
+                  mode: Mode.DIALOG,
+                  showSelectedItem: true,
+                  items: data,
+                  hint: "Silahkan pilih tempat",
+                  popupItemDisabled: (String s) => s.startsWith('Z'),
+                  onChanged: (value) {
+                    print(value);
+                    selectedTempatController = (value);
+                  },
+                  onSaved: (value) {
+                    txttempat = (value);
+                  },
+                  validator: validateTempat,
+                  // validator: (u) =>
+                  //     u == null || u.isEmpty ? "user field is required " : null,
+                  // onFind: (String value) => getData(value),
+                  // selectedItem: "Pilih tempat",
+                  dropdownSearchDecoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 3,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Pilih Metode Pembayaran :',
+                style: secondaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: medium,
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+
+              // Dropdown button Metode Pembayaran
+
+              Container(
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: DropdownSearch<String>(
+                  dropdownSearchBaseStyle: primeryTextStyle,
+                  showClearButton: true,
+                  mode: Mode.DIALOG,
+                  showSelectedItem: true,
+                  items: metodePembayaran,
+                  hint: "Pilih Metode Pembayaran",
+                  // selectedItem: "Uang Tunai",
+                  popupItemDisabled: (String s) => s.startsWith('Z'),
+                  onChanged: (value) {
+                    print(value);
+                    selectedPayController = (value);
+                  },
+                  dropdownSearchDecoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 3,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -247,8 +356,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       fontSize: 16, fontWeight: medium),
                 ),
                 SizedBox(height: 12),
-
-                pesananDetail(), // Menggunakan TextFormField
+                pesananDetail(),
               ],
             ),
           ),
@@ -260,7 +368,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'List Items',
+                  'Rincian Produk',
                   style: primeryTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: medium,
@@ -300,7 +408,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Product Quantity',
+                      'Jumlah Produk',
                       style: secondaryTextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -318,7 +426,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Product Price',
+                      'Harga Produk',
                       style: secondaryTextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -328,7 +436,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       NumberFormat.currency(
                               locale: 'id', symbol: 'Rp ', decimalDigits: 0)
                           .format(cartProvider.totalPrice()),
-
                       style: primeryTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -340,13 +447,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'ppn',
+                      'PPN',
                       style: secondaryTextStyle.copyWith(
                         fontSize: 12,
                       ),
                     ),
                     Text(
-                      'Free',
+                      '-',
                       style: primeryTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -390,33 +497,42 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ),
 
           // jika loading = true tapikan loading button, jika false container
-          isLoading
-              ? Container(
-                  margin: EdgeInsets.only(bottom: defaultMargin),
-                  child: LoadingButton())
-              : Container(
-                  height: 50,
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(
-                    vertical: defaultMargin,
-                  ),
-                  child: TextButton(
-                    onPressed: () {}, //handleCheckout
-                    style: TextButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Checkout Sekarang',
-                      style: primeryTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: semiBold,
-                      ),
-                    ),
+          if (isLoading)
+            Container(
+                margin: EdgeInsets.only(bottom: defaultMargin),
+                child: LoadingButton())
+          else
+            Container(
+              height: 50,
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(
+                vertical: defaultMargin,
+              ),
+              child: TextButton(
+                // onPressed: handleCheckout,
+                onPressed: () => save(
+                  atasNamaController.text,
+                  selectedTempatController,
+                  selectedPayController,
+                  cartProvider.carts.toList(),
+                  catatanController.text,
+                  cartProvider.totalPrice().toString(),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
+                child: Text(
+                  'Checkout Sekarang',
+                  style: primeryTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: semiBold,
+                  ),
+                ),
+              ),
+            ),
         ],
       );
     }
@@ -427,4 +543,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
       body: content(),
     );
   }
+
+  // metode validasi user password
+
+  String validateNama(String nama) {
+    if (nama.isEmpty) {
+      return 'Masukan Nama';
+    } else {
+      return null;
+    }
+  }
+
+  String validateTempat(String u) {
+    if (u == null || u.isEmpty) {
+      return 'Silahkan Pilih Tempat';
+    } else {
+      return null;
+    }
+  }
+  // (u) =>
+  //                     u == null || u.isEmpty ? "user field is required " : null,
 }

@@ -3,18 +3,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soendacoffee/pages/admin/detail_transaksi_page.dart';
+import 'package:soendacoffee/pages/admin/kelola_transaksi_page.dart';
 import 'package:soendacoffee/pages/admin/main_page.dart';
-import 'package:soendacoffee/pages/login.dart';
+import 'package:soendacoffee/pages/sign_in_page.dart';
 import 'package:soendacoffee/pages/pelanggan/cart_page.dart';
 import 'package:soendacoffee/pages/pelanggan/checkout_page.dart';
+import 'package:soendacoffee/pages/pelanggan/checkout_success_page.dart';
 import 'package:soendacoffee/pages/pelanggan/main_page.dart';
-import 'package:soendacoffee/pages/signup.dart';
+import 'package:soendacoffee/pages/sign_up_page.dart';
 import 'package:soendacoffee/pages/splash_page.dart';
 import 'package:soendacoffee/providers/auth_helper.dart';
 import 'package:soendacoffee/pages/admin/kelola_product_page.dart';
 import 'package:soendacoffee/pages/admin/add_product_page.dart';
 import 'package:soendacoffee/pages/admin/edit_product_page.dart';
 import 'package:soendacoffee/providers/cart_provider.dart';
+import 'package:soendacoffee/providers/checkout_provider.dart';
+import 'package:soendacoffee/providers/transaction_provider.dart';
 
 import './providers/products.dart';
 
@@ -35,22 +40,30 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => CartProvider(),
         ),
+        // ChangeNotifierProvider(
+        //   create: (context) => TransactionProvider(),
+        // ),
+        ChangeNotifierProvider(
+          create: (context) => CheckoutProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: {
           '/': (context) => SplashPage(),
           '/utama': (context) => MainScreen(),
-          '/sign-in': (context) => LoginPage(),
+          '/sign-in': (context) => SignInPag(),
           '/sign-up': (context) => SignupPage(),
           '/main-admin': (context) => MainPageAdmin(),
           '/kelola-product': (context) => KelolaProductPage(),
           '/add-product': (context) => AddProductPage(),
           '/edit-product': (context) => EditProductPage(),
+          '/kelola-transaksi': (context) => KelolaTransaksiPage(),
+          '/edit-transaksi': (context) => DetailTransaksiPage(),
           '/main-pelanggan': (context) => MainPagePelanggan(),
           '/cart': (context) => CartPage(),
           '/checkout': (context) => CheckoutPage(),
-          // '/checkout-success': (context) => CheckoutSuccessPage(),
+          '/checkout-success': (context) => CheckoutSuccessPage(),
         },
       ),
     );
@@ -90,7 +103,7 @@ class MainScreen extends StatelessWidget {
               },
             );
           }
-          return LoginPage();
+          return SignInPag();
         });
   }
 }

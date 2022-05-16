@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/products.dart';
-import '../../theme.dart';
+import 'package:soendacoffee/providers/products.dart';
+import 'package:soendacoffee/theme.dart';
 
 class EditProductPage extends StatelessWidget {
   static const route = "/edit-product";
@@ -18,7 +17,7 @@ class EditProductPage extends StatelessWidget {
     final TextEditingController namaController =
         TextEditingController(text: selectedProduct.nama);
     final TextEditingController hargaController =
-        TextEditingController(text: selectedProduct.harga);
+        TextEditingController(text: selectedProduct.harga.toString());
     final TextEditingController deskripsiController =
         TextEditingController(text: selectedProduct.nama);
     final TextEditingController katagoriController =
@@ -36,7 +35,7 @@ class EditProductPage extends StatelessWidget {
 
     Widget namaInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -90,7 +89,7 @@ class EditProductPage extends StatelessWidget {
 
     Widget hargaInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -144,7 +143,7 @@ class EditProductPage extends StatelessWidget {
 
     Widget deskripsiInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -198,7 +197,7 @@ class EditProductPage extends StatelessWidget {
 
     Widget katagoriInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -252,7 +251,7 @@ class EditProductPage extends StatelessWidget {
 
     Widget fotoInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -306,7 +305,7 @@ class EditProductPage extends StatelessWidget {
 
     Widget stokInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -391,7 +390,7 @@ class EditProductPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor1,
       appBar: AppBar(
-        title: Text("Edit Produk"),
+        title: Center(child: Text("Edit Produk")),
         elevation: 0,
         backgroundColor: backgroundColor1,
         actions: [
@@ -407,16 +406,19 @@ class EditProductPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          namaInput(),
-          hargaInput(),
-          deskripsiInput(),
-          katagoriInput(),
-          fotoInput(),
-          stokInput(),
-          editProdukButton(),
-        ],
+      body: Container(
+        margin: EdgeInsets.only(left: 20, right: 20),
+        child: ListView(
+          children: [
+            namaInput(),
+            hargaInput(),
+            deskripsiInput(),
+            katagoriInput(),
+            fotoInput(),
+            stokInput(),
+            editProdukButton(),
+          ],
+        ),
       ),
     );
   }

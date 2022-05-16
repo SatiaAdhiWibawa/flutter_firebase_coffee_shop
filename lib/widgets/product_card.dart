@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:soendacoffee/models/product.dart';
 import 'package:soendacoffee/pages/pelanggan/product_page.dart';
 import 'package:soendacoffee/theme.dart';
+import 'package:intl/intl.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -36,6 +37,7 @@ class ProductCard extends StatelessWidget {
                 top: Radius.circular(20),
               ),
               child: Image.network(
+                // product.galeri[0].url,
                 product.foto,
                 height: 160,
                 width: 215,
@@ -67,7 +69,10 @@ class ProductCard extends StatelessWidget {
                     height: 6,
                   ),
                   Text(
-                    product.harga,
+                    NumberFormat.currency(
+                            locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                        .format(double.parse(product.harga)),
+                    // product.harga.toString(),
                     style: priceTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: medium,

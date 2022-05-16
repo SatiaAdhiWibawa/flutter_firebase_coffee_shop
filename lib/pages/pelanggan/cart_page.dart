@@ -102,7 +102,7 @@ class CartPage extends StatelessWidget {
                     style: primeryTextStyle,
                   ),
                   Text(
-                    // 'Rp. ${cartProvider.totalPrice()!}',
+                    // 'Rp. ${cartProvider.totalPrice().toString()}',
                     NumberFormat.currency(
                             locale: 'id', symbol: 'Rp ', decimalDigits: 0)
                         .format(cartProvider.totalPrice()),

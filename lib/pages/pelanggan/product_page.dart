@@ -1,7 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:soendacoffee/models/product.dart';
+import 'package:soendacoffee/providers/cart_provider.dart';
 import 'package:soendacoffee/theme.dart';
+import 'package:intl/intl.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
@@ -34,6 +37,9 @@ class _ProductPageState extends State<ProductPage> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    // panggil provider
+
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
     Future<void> showSuccessDialog() async {
       return showDialog(
         context: context,
@@ -138,6 +144,7 @@ class _ProductPageState extends State<ProductPage> {
       );
     }
 
+    // ignore: unused_element
     header() {
       int index = -1;
       return Stack(
@@ -222,6 +229,7 @@ class _ProductPageState extends State<ProductPage> {
       );
     }
 
+    // ignore: unused_element
     header1() {
       return Stack(
         alignment: Alignment.center,
@@ -347,7 +355,10 @@ class _ProductPageState extends State<ProductPage> {
                       style: primeryTextStyle,
                     ),
                     Text(
-                      widget.product.harga,
+                      // widget.product.harga.toString(),
+                      NumberFormat.currency(
+                              locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                          .format(double.parse(widget.product.harga)),
                       style: priceTextStyle.copyWith(
                           fontSize: 16, fontWeight: semiBold),
                     ),
@@ -429,6 +440,7 @@ class _ProductPageState extends State<ProductPage> {
                         height: 54,
                         child: TextButton(
                           onPressed: () {
+                            cartProvider.addCart(widget.product);
                             showSuccessDialog();
                           },
                           style: TextButton.styleFrom(
